@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat en Tiempo Real</title>
+    <link rel="stylesheet" href="/static/index.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Chat en Tiempo Real</h1>
+        <input type="text" id="messageInput" placeholder="Escribe tu mensaje aquí...">
+        <button id="sendButton">Enviar</button>
+        <div class="messages" id="messageContainer"></div>
+    </div>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        const socket = io();
+
+        const messageInput = document.getElementById('messageInput');
+        const sendButton = document.getElementById('sendButton');
+        const messageContainer = document.getElementById('messageContainer');
+
+        // Enviar mensaje al servidor
+        sendButton.addEventListener('click', () => {
+            const message = messageInput.value.trim();
+            if (message) {
+                socket.emit('newMessage', message);
+                messageInput.value = ''; 
+            }
+        });
+
+        // Recibir mensajes del servidor
+        socket.on('messageHistory', (messages) => {
+            messageContainer.innerHTML = ''; 
+            messages.forEach(msg => {
+                const p = document.createElement('p');
+                p.textContent = `${msg.socketid}: ${msg.mensaje}`;
+                messageContainer.appendChild(p);
+            });
+        });
+
+        socket.on('newMessage', (message) => {
+            const p = document.createElement('p');
+            p.textContent = `${message.socketid}: ${message.mensaje}`;
+            messageContainer.appendChild(p);
+        });
+    </script>
+</body>
+</html>

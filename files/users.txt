@@ -1,0 +1,7 @@
+[
+    {"id":1,"title":"Macetero","description":"Macetero Rojo impreso en 3D","code":"MDJD23","price":20,"stock":3,"category":"Producto"},
+    {"id":2,"title":"Galardón","description":"Premios impresos en 3D","code":"MDMM13","price":100,"stock":4,"category":"Premios"},
+    {"id":3,"title":"Figura Personalizada","description":"Personaliza tus figuras impresas en 3D","code":"KSJN20","price":200,"stock":5,"category":"Figuras"},
+    {"id":4,"title":"Estructuras 3D","description":"Estructuras impresas en 3D","code":"KSNS24","price":300,"stock":2,"category":"Estructuras"},
+    {"id":5,"title":"Puzzles","description":"Personaliza tu puzzle impreso en 3D","code":"MSJD98","price":600,"stock":5,"category":"Puzzles"}
+]
