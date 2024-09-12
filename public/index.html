@@ -21,7 +21,6 @@
         const sendButton = document.getElementById('sendButton');
         const messageContainer = document.getElementById('messageContainer');
 
-        // Enviar mensaje al servidor
         sendButton.addEventListener('click', () => {
             const message = messageInput.value.trim();
             if (message) {
@@ -30,7 +29,6 @@
             }
         });
 
-        // Recibir mensajes del servidor
         socket.on('messageHistory', (messages) => {
             messageContainer.innerHTML = ''; 
             messages.forEach(msg => {

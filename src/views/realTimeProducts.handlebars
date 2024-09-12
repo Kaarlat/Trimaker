@@ -1,43 +1,51 @@
-<h2>Productos en Tiempo Real</h2>
-<ul id="product-list">
-    {{#each products}}
-    <li>{{this.name}} - {{this.price}}</li>
-    {{/each}}
-</ul>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Crea tu producto</title>
+    <link rel="stylesheet" href="/static/index.css">
+</head>
+<body>
+    <h1>Crea tu producto</h1>
+    <form id="product-form">
+        <input type="text" id="title" placeholder="Title" required>
+        <input type="text" id="description" placeholder="Description" required>
+        <input type="text" id="code" placeholder="Code" required>
+        <input type="number" id="price" placeholder="Price" required>
+        <input type="number" id="stock" placeholder="Stock" required>
+        <input type="text" id="category" placeholder="Category" required>
+        <button type="submit">Add Product</button>
+    </form>
 
-<form id="product-form">
-    <input type="text" id="product-name" placeholder="Nombre del producto" required>
-    <input type="number" id="product-price" placeholder="Precio" required>
-    <button type="submit">Agregar Producto</button>
-</form>
+    <div id="messages-container"></div>
 
-<h3>Mensajes</h3>
-<div id="messages-container"></div>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        const socket = io();
 
-<script src="/static/socket.io.js"></script>
-<script>
-    const socket = io();
-    const productList = document.getElementById('product-list');
-    const productForm = document.getElementById('product-form');
-    const productNameInput = document.getElementById('product-name');
-    const productPriceInput = document.getElementById('product-price');
-    const messagesContainer = document.getElementById('messages-container');
-
-    productForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-        const name = productNameInput.value;
-        const price = productPriceInput.value;
-        socket.emit('newMessage', { socketid: socket.id, message: `Nuevo producto: ${name} - ${price}` });
-        productNameInput.value = '';
-        productPriceInput.value = '';
-    });
-
-    socket.on('messageHistory', (messages) => {
-        messagesContainer.innerHTML = '';
-        messages.forEach(msg => {
-            const messageElement = document.createElement('p');
-            messageElement.textContent = `${msg.socketid}: ${msg.message}`;
-            messagesContainer.appendChild(messageElement);
+        document.getElementById('product-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const product = {
+                title: document.getElementById('title').value,
+                description: document.getElementById('description').value,
+                code: document.getElementById('code').value,
+                price: document.getElementById('price').value,
+                stock: document.getElementById('stock').value,
+                category: document.getElementById('category').value,
+            };
+            socket.emit('addProduct', product);
         });
-    });
-</script>
+
+        socket.on('productList', products => {
+            const container = document.getElementById('messages-container');
+            container.innerHTML = '';
+            products.forEach(product => {
+                const p = document.createElement('p');
+                p.textContent = `${product.title} - ${product.price}`;
+                container.appendChild(p);
+            });
+        });
+
+        socket.emit('getProducts');
+    </script>
+</body>
+</html>
