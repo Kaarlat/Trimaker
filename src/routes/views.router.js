@@ -11,6 +11,10 @@ router.get('/api/products', (req, res) => {
     res.render('products');
 });
 
+router.get('/api/carts', (req, res) => {
+    res.render('carts');
+});
+
 router.get('/realtimeproducts', (req, res) => {
     res.render('realTimeProducts');
 });

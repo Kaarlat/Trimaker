@@ -4,7 +4,6 @@ import { fileURLToPath } from 'url';
 import { engine } from 'express-handlebars';
 import { Server } from 'socket.io';
 import http from 'http';
-import cartsRouter from './routes/carts.js';
 import viewsRouter from './routes/views.router.js';
 import { readJSONFile, writeJSONFile } from './utils.js';
 
@@ -23,7 +22,6 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'handlebars');
 
 app.use('/static', express.static(path.join(__dirname, '../public')));
-app.use('/api/carts', cartsRouter);
 app.use('/', viewsRouter); 
 
 let products = readJSONFile(path.join(__dirname, '../src/files/products.json'));
