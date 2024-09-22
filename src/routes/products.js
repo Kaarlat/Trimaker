@@ -1,43 +1,51 @@
 import express from 'express';
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
 const router = express.Router();
 
-let products = [];
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+const productsFilePath = path.join(__dirname, '../src/files/products.json');
+
+const readProductsFromFile = () => {
+    try {
+        const data = fs.readFileSync(productsFilePath, 'utf-8');
+        return JSON.parse(data);
+    } catch (error) {
+        console.error('Error leyendo el archivo de productos:', error);
+        return [];
+    }
+};
+
+const writeProductsToFile = (products) => {
+    fs.writeFileSync(productsFilePath, JSON.stringify(products, null, 2), 'utf-8');
+};
 
 router.get('/', (req, res) => {
+    const products = readProductsFromFile();
     res.json(products);
 });
 
 router.post('/', (req, res) => {
-    const newProduct = req.body;
+    const products = readProductsFromFile();
+    
+    const newProduct = {
+        id: products.length ? products[products.length - 1].id + 1 : 1,
+        title: req.body.title,
+        description: req.body.description,
+        code: req.body.code,
+        price: req.body.price,
+        stock: req.body.stock,
+        category: req.body.category
+    };
+
     products.push(newProduct);
+    writeProductsToFile(products);
+
     res.status(201).json(newProduct);
-});
-
-router.get('/:id', (req, res) => {
-    const { id } = req.params;
-    const product = products.find(p => p.id === parseInt(id));
-    if (product) {
-        res.json(product);
-    } else {
-        res.status(404).json({ message: 'Producto no encontrado' });
-    }
-});
-
-router.put('/:id', (req, res) => {
-    const { id } = req.params;
-    const index = products.findIndex(p => p.id === parseInt(id));
-    if (index !== -1) {
-        products[index] = req.body;
-        res.json(products[index]);
-    } else {
-        res.status(404).json({ message: 'Producto no encontrado' });
-    }
-});
-
-router.delete('/:id', (req, res) => {
-    const { id } = req.params;
-    products = products.filter(p => p.id !== parseInt(id));
-    res.status(204).end();
 });
 
 export default router;

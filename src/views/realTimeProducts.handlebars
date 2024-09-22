@@ -1,22 +1,28 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
-    <title>Crea tu producto</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/static/index.css">
+    <link rel="stylesheet" href="/static/products.css">
+    <title>Crear Producto</title>
 </head>
 <body>
     <h1>Crea tu producto</h1>
-    <form id="product-form">
-        <input type="text" id="title" placeholder="Title" required>
-        <input type="text" id="description" placeholder="Description" required>
-        <input type="text" id="code" placeholder="Code" required>
-        <input type="number" id="price" placeholder="Price" required>
-        <input type="number" id="stock" placeholder="Stock" required>
-        <input type="text" id="category" placeholder="Category" required>
-        <button type="submit">Add Product</button>
-    </form>
+    <div class="form-card"> 
+        <form id="product-form">
+            <input type="text" id="title" placeholder="Title" required>
+            <input type="text" id="description" placeholder="Description" required>
+            <input type="text" id="code" placeholder="Code" required>
+            <input type="number" id="price" placeholder="Price" required>
+            <input type="number" id="stock" placeholder="Stock" required>
+            <input type="text" id="category" placeholder="Category" required>
+            <button type="submit">Add Product</button>
+        </form>
+    </div>
 
-    <div id="messages-container"></div>
+    <h2>Productos</h2>
+    <ul id="product-list"></ul>
 
     <script src="/socket.io/socket.io.js"></script>
     <script>
@@ -33,19 +39,26 @@
                 category: document.getElementById('category').value,
             };
             socket.emit('addProduct', product);
+            this.reset();
         });
 
         socket.on('productList', products => {
-            const container = document.getElementById('messages-container');
-            container.innerHTML = '';
+            const productList = document.getElementById('product-list');
+            productList.innerHTML = ''; 
+
             products.forEach(product => {
-                const p = document.createElement('p');
-                p.textContent = `${product.title} - ${product.price}`;
-                container.appendChild(p);
+                const listItem = document.createElement('li');
+                listItem.innerHTML = `
+                    ${product.title} - $${product.price}
+                    <button onclick="deleteProduct(${product.id})">Eliminar</button>
+                `;
+                productList.appendChild(listItem);
             });
         });
 
-        socket.emit('getProducts');
+        function deleteProduct(id) {
+            socket.emit('deleteProduct', id);
+        }
     </script>
 </body>
 </html>
