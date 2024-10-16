@@ -3,22 +3,51 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/static/products.css">
-    <title>Productos</title>
+    <link rel="stylesheet" href="../../public/products.css">
+    <title>Eventos creados</title>
 </head>
 <body>
     <div class="products-header">
-        <h1>Productos</h1>
+        <h1>Eventos creados</h1>
     </div>
-    
-    <div class="products-container" id="products-container">
 
+    <div class="filter-container">
+        <select id="category-filter">
+            <option value="">Filtrar por categoría</option>
+            <option value="Adulto Mayor">Adulto Mayor</option>
+            <option value="Cultural">Cultural</option>
+            <option value="Encuentros">Encuentros</option>
+            <option value="Fiestas">Fiestas</option>
+            <option value="Gastronómicos">Gastronómicos</option>
+            <option value="Gratuitos">Gratuitos</option>
+            <option value="Infantil">Infantil</option>
+            <option value="Turismo">Turismo</option>
+            <option value="">Todas</option>
+        </select>
+
+        <select id="availability-filter">
+            <option value="">Mostrar todos</option>
+            <option value="available">Disponibles</option>
+        </select>
+
+        <select id="sort-filter">
+            <option value="">Ordenar por precio</option>
+            <option value="asc">Menor a Mayor</option>
+            <option value="desc">Mayor a menor</option>
+        </select>
+
+        <button id="filter-button">Aplicar Filtros</button>
+    </div>
+
+    <div class="products-container" id="products-container">
+      
     </div>
 
     <script src="/socket.io/socket.io.js"></script>
     <script>
         const socket = io();
 
+      
         socket.emit('getProducts');
 
         socket.on('productList', products => {
@@ -30,17 +59,42 @@
                 productCard.classList.add('product-card');
                 productCard.innerHTML = `
                     <h2>${product.title}</h2>
-                    <p>${product.description}</p>
+                    <p>${product.category || 'Descripción no disponible'}</p>
                     <p>Precio: $${product.price}</p>
-                    <button onclick="deleteProduct(${product.id})">Eliminar</button>
+                    <button onclick="deleteProduct('${product._id}')">Eliminar</button>
                 `;
                 container.appendChild(productCard);
             });
         });
 
+        document.getElementById('filter-button').addEventListener('click', () => {
+            const category = document.getElementById('category-filter').value;
+            const available = document.getElementById('availability-filter').value;
+            const sort = document.getElementById('sort-filter').value;
+
+            socket.emit('getFilteredProducts', { category, available, sort });
+        });
+
         function deleteProduct(id) {
             socket.emit('deleteProduct', id);
         }
+
+        socket.on('eventList', events => {
+            const container = document.getElementById('products-container');
+            container.innerHTML = '';
+
+            events.forEach(event => {
+                const eventCard = document.createElement('div');
+                eventCard.classList.add('product-card');
+                eventCard.innerHTML = `
+                    <h2>${event.title}</h2>
+                    <p>${event.category || 'Descripción no disponible'}</p>
+                    <p>Precio: $${event.price}</p>
+                    <button onclick="deleteProduct('${event._id}')">Eliminar</button>
+                `;
+                container.appendChild(eventCard);
+            });
+        });
     </script>
 </body>
 </html>

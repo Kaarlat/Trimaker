@@ -6,31 +6,46 @@ const app = express();
 const server = http.createServer(app);
 const io = socketIo(server);
 
+// Para almacenar
+const carts = {}; 
+
+// Middleware
+app.use(express.json());
 app.use(express.static('public'));
 
-let messageHistory = [];
+// Obtener los productos en el carrito
+app.get('/api/cart', (req, res) => {
+    const cartId = req.query.socketId; 
+    if (carts[cartId]) {
+        res.json(carts[cartId].products);
+    } else {
+        res.json([]);
+    }
+});
 
+// Socket
 io.on('connection', (socket) => {
-    console.log('Un usuario se ha conectado');
+    console.log('Un usuario se ha conectado con ID:', socket.id);
+    
+    // Inicializar el carrito
+    carts[socket.id] = { products: [] };
 
-    socket.emit('messageHistory', messageHistory);
+    socket.on('addToCart', (item) => {
+        // Agregar item
+        carts[socket.id].products.push(item);
+        console.log(`Agregado al carrito: ${JSON.stringify(item)}`);
 
-    socket.on('newMessage', (message) => {
-     
-        const newMessage = { socketid: socket.id, mensaje: message };
-        messageHistory.push(newMessage);
-
-        io.emit('newMessage', newMessage);
+        // Actualizar cart
+        io.emit('cartUpdated', carts[socket.id]);
     });
 
-    
     socket.on('disconnect', () => {
-        console.log('Un usuario se ha desconectado');
+        console.log('Usuario desconectado:', socket.id);
+        delete carts[socket.id]; // Limpiar el carrito
     });
 });
 
-
-const PORT = process.env.PORT || 8080; 
+const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => {
-    console.log(`Servidor en funcionamiento en http://localhost:${PORT}`);
+    console.log(`Servidor escuchando en el puerto ${PORT}`);
 });

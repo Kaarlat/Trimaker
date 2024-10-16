@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/static/index.css">
-    <link rel="stylesheet" href="/static/products.css">
+    <link rel="stylesheet" href="../../public/index.css">
+    <link rel="stylesheet" href="../../public/products.css">
     <title>Crear Evento</title>
 </head>
 <body>
-    <h1>Crea tu popio evento</h1>
+    <h1>Crea tu propio evento</h1>
     <div class="form-card"> 
         <form id="product-form">
             <input type="text" id="title" placeholder="Nombre" required>
@@ -19,7 +19,7 @@
         </form>
     </div>
 
-    <h2>Evento</h2>
+    <h2>Eventos</h2>
     <ul id="product-list"></ul>
 
     <script src="/socket.io/socket.io.js"></script>
@@ -30,14 +30,15 @@
             event.preventDefault();
             const product = {
                 title: document.getElementById('title').value,
-                description: document.getElementById('description').value,
-                code: document.getElementById('code').value,
                 price: document.getElementById('price').value,
                 stock: document.getElementById('stock').value,
                 category: document.getElementById('category').value,
             };
-            socket.emit('addProduct', product);
-            this.reset();
+         
+            console.log('Producto a agregar:', product);
+
+            socket.emit('createEvent', product);
+            this.reset(); 
         });
 
         socket.on('productList', products => {
@@ -48,7 +49,7 @@
                 const listItem = document.createElement('li');
                 listItem.innerHTML = `
                     ${product.title} - $${product.price}
-                    <button onclick="deleteProduct(${product.id})">Eliminar</button>
+                    <button onclick="deleteProduct('${product._id}')">Eliminar</button>
                 `;
                 productList.appendChild(listItem);
             });

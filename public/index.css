@@ -165,8 +165,8 @@ p {
 }
 
 .dropdown-content li a:hover {
-    background-color: #FFD700; /* Dorado */
-    color: #1C1C1C; /* Negro */
+    background-color: #FFD700;
+    color: #1C1C1C;
 }
 
 .dropdown:hover .dropdown-content {
@@ -217,28 +217,27 @@ h1 {
 
 /* Estilo para el formulario de filtrado horizontal */
 .filter-form-horizontal {
-    max-width: 1200px; /* Ancho máximo para el formulario */
-    margin: 0 auto; /* Centrar el formulario */
+    max-width: 1200px; 
+    margin: 0 auto; 
 }
 
 .filter-form-horizontal form {
-    display: flex; /* Usar flexbox para alineación */
-    justify-content: space-between; /* Espacio entre los elementos */
-    align-items: center; /* Centrar verticalmente */
-    gap: 15px; /* Espacio entre los elementos del formulario */
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    gap: 15px; 
 }
 
 .filter-form-horizontal .form-group {
-    flex: 1; /* Asegura que cada grupo de formulario ocupe espacio igual */
+    flex: 1; 
 }
 
 .filter-form-horizontal .form-group label {
-    display: block; /* Asegura que la etiqueta esté sobre el input */
-    font-size: 0.9rem; /* Tamaño de fuente de la etiqueta */
-    margin-bottom: 5px; /* Espacio debajo de la etiqueta */
+    display: block; 
+    font-size: 0.9rem; 
+    margin-bottom: 5px;
 }
 
-/* Estilo adicional para el formulario */
 .form-card {
     margin: 20px auto;
     padding: 20px;
@@ -308,9 +307,8 @@ footer {
     background-color: #fff;
 }
 
-/* Estilo para el botón "Crea tu evento" */
 #create-event-btn {
-    transition: transform 0.3s ease; /* Transición suave para el efecto de salto */
+    transition: transform 0.3s ease; 
     background-color: #D22730;
 }
 
@@ -321,12 +319,12 @@ footer {
 
 @keyframes bounce {
     0%, 20%, 50%, 80%, 100% {
-        transform: translateY(0); /* Posición inicial */
+        transform: translateY(0);
     }
     40% {
-        transform: translateY(-10px); /* Salto hacia arriba */
+        transform: translateY(-10px); 
     }
     60% {
-        transform: translateY(-5px); /* Pequeño salto hacia abajo */
+        transform: translateY(-5px); 
     }
 }

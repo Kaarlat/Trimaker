@@ -2,12 +2,22 @@ import mongoose from 'mongoose';
 
 const eventSchema = new mongoose.Schema({
     title: { type: String, required: true },
-    description: { type: String, required: true },
-    date: { type: Date, required: true },
-    createdBy: { type: String, required: true },
-    createdAt: { type: Date, default: Date.now }
+    price: { type: Number, required: true },
+    stock: { type: Number, required: true },
+    category: { type: String, required: true }
 });
 
 const Event = mongoose.model('Event', eventSchema);
 
-export default Event;
+export const createEvent = async (data) => {
+    const newEvent = new Event(data);
+    return await newEvent.save();
+};
+
+export const getEvents = async () => {
+    return await Event.find();
+};
+
+export const deleteEvent = async (id) => {
+    return await Event.findByIdAndDelete(id);
+};
