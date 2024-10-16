@@ -81,7 +81,7 @@ io.on('connection', (socket) => {
     socket.on('deleteProduct', (id) => {
         Event.findByIdAndDelete(id).then(() => {
             Event.find().sort({ createdAt: -1 }).exec().then(events => {
-                io.emit('productList', events); /
+                io.emit('productList', events);
             });
         }).catch(err => {
             console.error('Error al eliminar el producto:', err);

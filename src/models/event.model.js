@@ -21,3 +21,5 @@ export const getEvents = async () => {
 export const deleteEvent = async (id) => {
     return await Event.findByIdAndDelete(id);
 };
+
+export default Event;
