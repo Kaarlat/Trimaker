@@ -1,3 +1,208 @@
+.montserrat-heading {
+    font-family: "Montserrat", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 700; 
+    font-style: normal;
+  }
+  
+  body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      text-align: center;
+  }
+  
+  h1 {
+      margin-top: 20px;
+      font-family: "Montserrat", sans-serif;
+      font-weight: 700; 
+  }
+  
+  .form-card {
+      margin: 20px auto;
+      padding: 20px;
+      background-color: #fff;
+      border-radius: 5px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      width: 300px; 
+  }
+  
+  .form-card form {
+      display: flex;
+      flex-direction: column;
+  }
+  
+  input {
+      margin: 5px 0;
+      padding: 10px;
+      border-radius: 5px;
+      border: 1px solid #ddd;
+  }
+  
+  button {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      background-color: #f90;
+      color: #fff;
+      cursor: pointer;
+  }
+  
+  button:hover {
+      background-color: #e80;
+  }
+  
+  ul {
+      list-style-type: none;
+      padding: 0;
+  }
+  
+  li {
+      padding: 10px;
+      border-bottom: 1px solid #ddd;
+  }
+  
+  header {
+      background-color: #1C1C1C;
+      color: #ffffff;
+      padding: 10px 0;
+      text-align: center;
+  }
+  
+  main {
+      padding: 20px;
+      max-width: 1200px;
+      margin: 0 auto;
+  }
+  
+  footer {
+      background-color: #333;
+      color: #fff;
+      text-align: center;
+      padding: 10px 0;
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+  }
+  
+  #messages-container {
+      margin-top: 20px;
+      padding: 10px;
+      border: 1px solid #ddd;
+      background-color: #fff;
+  }
+  
+/* Header General */
+header {
+    background-color: #1C1C1C; /* Negro */
+    color: #FFFFFF; /* Blanco */
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.logo-container h1 {
+    font-family: "Montserrat", sans-serif;
+    font-weight: 700;
+    color: #FFD700; /* Dorado */
+    margin: 0;
+}
+
+p {
+    font-size: 10px
+}
+
+/* Navbar */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.nav-left, .nav-right {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+}
+
+.nav-left li, .nav-right li {
+    margin: 0 15px;
+}
+
+.nav-left li a, .nav-right li a {
+    color: #FFFFFF;
+    text-decoration: none;
+    font-family: "Montserrat", sans-serif;
+    font-weight: 500;
+    font-size: 16px;
+    padding: 10px 15px;
+    display: inline-block;
+    transition: background-color 0.3s ease;
+}
+
+.nav-left li a:hover, .nav-right li a:hover {
+    background-color: #D22730; /* Rojo */
+    border-radius: 5px;
+}
+
+/* Dropdown Menu */
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #1C1C1C;
+    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+    border-radius: 5px;
+    z-index: 1;
+}
+
+.dropdown-content li a {
+    padding: 10px 20px;
+    display: block;
+    text-align: left;
+    color: #FFFFFF;
+}
+
+.dropdown-content li a:hover {
+    background-color: #FFD700; /* Dorado */
+    color: #1C1C1C; /* Negro */
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+/* Botones de Carrito y Log In */
+.cart-button, .login-button {
+    display: flex;
+    align-items: center;
+}
+
+.cart-button img, .login-button img {
+    width: 20px;
+    height: 20px;
+    margin-right: 8px;
+}
+
+/* Header Responsive */
+@media (max-width: 768px) {
+    header {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .navbar ul {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .navbar ul li {
+        margin-bottom: 10px;
+    }
+}
+
+/* Estilo para el cuerpo y el encabezado */
 body {
     font-family: Arial, sans-serif;
     background-color: #f4f4f4;
@@ -6,8 +211,34 @@ body {
 
 h1 {
     margin-top: 20px;
+    font-family: "Montserrat", sans-serif;
+    font-weight: 700;
 }
 
+/* Estilo para el formulario de filtrado horizontal */
+.filter-form-horizontal {
+    max-width: 1200px; /* Ancho máximo para el formulario */
+    margin: 0 auto; /* Centrar el formulario */
+}
+
+.filter-form-horizontal form {
+    display: flex; /* Usar flexbox para alineación */
+    justify-content: space-between; /* Espacio entre los elementos */
+    align-items: center; /* Centrar verticalmente */
+    gap: 15px; /* Espacio entre los elementos del formulario */
+}
+
+.filter-form-horizontal .form-group {
+    flex: 1; /* Asegura que cada grupo de formulario ocupe espacio igual */
+}
+
+.filter-form-horizontal .form-group label {
+    display: block; /* Asegura que la etiqueta esté sobre el input */
+    font-size: 0.9rem; /* Tamaño de fuente de la etiqueta */
+    margin-bottom: 5px; /* Espacio debajo de la etiqueta */
+}
+
+/* Estilo adicional para el formulario */
 .form-card {
     margin: 20px auto;
     padding: 20px;
@@ -15,11 +246,6 @@ h1 {
     border-radius: 5px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     width: 300px; 
-}
-
-.form-card form {
-    display: flex;
-    flex-direction: column;
 }
 
 input {
@@ -53,8 +279,8 @@ li {
 }
 
 header {
-    background-color: #333;
-    color: #fff;
+    background-color: #1C1C1C;
+    color: #ffffff;
     padding: 10px 0;
     text-align: center;
 }
@@ -80,4 +306,27 @@ footer {
     padding: 10px;
     border: 1px solid #ddd;
     background-color: #fff;
+}
+
+/* Estilo para el botón "Crea tu evento" */
+#create-event-btn {
+    transition: transform 0.3s ease; /* Transición suave para el efecto de salto */
+    background-color: #D22730;
+}
+
+/* Efecto de salto */
+.bounce {
+    animation: bounce 0.5s ease;
+}
+
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% {
+        transform: translateY(0); /* Posición inicial */
+    }
+    40% {
+        transform: translateY(-10px); /* Salto hacia arriba */
+    }
+    60% {
+        transform: translateY(-5px); /* Pequeño salto hacia abajo */
+    }
 }
