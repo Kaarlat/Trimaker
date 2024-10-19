@@ -137,10 +137,10 @@ app.delete('/api/carts/:id', async (req, res) => {
 });
 
 app.put('/api/carts/:id', async (req, res) => {
-    const { products } = req.body; // Asegúrate de que el cuerpo contenga 'products'
+    const { category } = req.body;
     
     try {
-        const updatedCart = await Cart.findByIdAndUpdate(req.params.id, { products }, { new: true });
+        const updatedCart = await Cart.findByIdAndUpdate(req.params.id, { category }, { new: true });
         res.json({ status: "success", payload: updatedCart });
     } catch (error) {
         console.error('Error al actualizar el carrito:', error);
@@ -156,7 +156,7 @@ const validateProductData = (data) => {
     return { valid: true };
 };
 
-// Ejemplo de cómo agregar un producto
+
 app.post('/api/products', async (req, res) => {
     const { valid, message } = validateProductData(req.body);
     if (!valid) {
@@ -166,6 +166,9 @@ app.post('/api/products', async (req, res) => {
     const newProduct = new Event(req.body);
     try {
         await newProduct.save();
+        
+        io.emit('productAdded', newProduct);
+
         res.status(201).json({ status: "success", payload: newProduct });
     } catch (error) {
         console.error('Error al agregar el producto:', error);

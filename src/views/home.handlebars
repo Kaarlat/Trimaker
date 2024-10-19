@@ -42,17 +42,17 @@
         <a id="create-event-btn" href="/realTimeProducts" class="btn btn-warning mt-3 btn-jump">Crear Evento</a>
 
         <div id="events-container" class="row mt-4">
-            {{#each events}} <!-- Iterar sobre los eventos -->
+            {{#each events}} 
             <div class="col-md-4">
                 <div class="card mb-4">
                     <div class="card-body">
-                        <h5 class="card-title">{{this.title}}</h5> <!-- Suponiendo que tu evento tiene un campo title -->
-                        <p class="card-text">{{this.description}}</p> <!-- Suponiendo que tu evento tiene un campo description -->
-                        <p class="card-text"><strong>Precio:</strong> {{this.price}} CLP</p> <!-- Suponiendo que tu evento tiene un campo price -->
-                        <p class="card-text"><strong>Categoría:</strong> {{this.category}}</p> <!-- Suponiendo que tu evento tiene un campo category -->
-                        
+                        <h5 class="card-title">{{this.name}}</h5> 
+                        <p class="card-text">{{this.description}}</p> 
+                        <p class="card-text"><strong>Precio:</strong> {{this.price}} CLP</p>
+                        <p class="card-text"><strong>Categoría:</strong> {{this.category}}</p>
                         <div class="input-group mb-3">
-                            <input type="number" class="form-control" value="1" min="1" id="quantity-{{this._id}}" style="width: 70px;">
+                            <input type="number" class="form-controls quantity" value="1" min="1" id="quantity-{{this._id}}" style="width: 120px;">
+
                             <button class="btn btn-success add-to-cart" data-id="{{this._id}}">Agregar al carrito</button>
                         </div>
                     </div>

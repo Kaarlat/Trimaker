@@ -38,10 +38,11 @@
 }
 
 .quantity {
-    width: 5px; 
+    width: 140px; 
     text-align: center; 
-    margin: 10px 0;
-    padding: 10px;
+    margin: 3px 0;
+    padding: 3px;
+    display: inline-block; 
 }
 
 .btn-primary {

@@ -1,6 +1,7 @@
 import express from 'express';
 import http from 'http';
 import socketIo from 'socket.io';
+import path from 'path'; // Importar path para manejar rutas
 
 const app = express();
 const server = http.createServer(app);
@@ -11,7 +12,12 @@ const carts = {};
 
 // Middleware
 app.use(express.json());
-app.use(express.static('public'));
+app.use(express.static('public')); // Servir archivos estáticos desde 'public'
+
+// Ruta para el chat (opcional, ya que se puede acceder directamente)
+app.get('/chat', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'index.html')); // Cambia a la ruta correcta
+});
 
 // Obtener los productos en el carrito
 app.get('/api/cart', (req, res) => {

@@ -12,7 +12,7 @@ router.get('/', async (req, res) => {
         query.category = category;
     }
     if (available) {
-        query.stock = available === 'true' ? { $gt: 0 } : { $gte: 0 }; // Filtra solo eventos disponibles
+        query.stock = available === 'true' ? { $gt: 0 } : { $gte: 0 };
     }
 
     const options = {

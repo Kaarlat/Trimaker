@@ -1,20 +1,14 @@
 import express from 'express';
-import Event from '../models/event'; 
+import path from 'path';
 
 const router = express.Router();
 
 router.get('/', async (req, res) => {
-    try {
-        const events = await Event.find(); 
-        res.render('home', { events });
-    } catch (error) {
-        console.error('Error al obtener eventos:', error);
-        res.status(500).send('Error del servidor');
-    }
+    res.render('home');
 });
 
-router.get('/api/products', (req, res) => {
-    res.render('products'); 
+router.get('/api/products', async (req, res) => {
+    res.render('products');
 });
 
 router.get('/api/carts', (req, res) => {
