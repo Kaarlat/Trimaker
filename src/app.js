@@ -6,8 +6,9 @@ import { Server } from 'socket.io';
 import http from 'http';
 import mongoose from 'mongoose';
 import viewsRouter from '../src/routes/views.router.js';
+import productsRouter from '../src/routes/products.js';
 import Message from '../src/models/message.js';
-import Event from '../src/models/event.model.js'; 
+import Event from './models/event.js'; 
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -35,7 +36,9 @@ app.set('view engine', 'handlebars');
 
 app.use('/static', express.static(path.join(__dirname, '../public')));
 app.use('/', viewsRouter);
+app.use('/api/products', productsRouter);
 
+// Socket.IO
 io.on('connection', (socket) => {
     console.log('Nuevo cliente conectado');
 
@@ -60,13 +63,12 @@ io.on('connection', (socket) => {
         });
     });
 
-    // Escuchar por la creación de nuevos eventos
+    // Creación de nuevos eventos
     socket.on('createEvent', (eventData) => {
         const newEvent = new Event(eventData);
 
         newEvent.save().then(() => {
             console.log('Evento creado:', newEvent);
-            
             Event.find().sort({ createdAt: -1 }).exec().then(events => {
                 io.emit('productList', events);
             }).catch(err => {
@@ -97,9 +99,7 @@ app.get('/api/events', (req, res) => {
 
     // Obtener eventos desde MongoDB
     Event.find().sort({ createdAt: -1 }).exec().then(events => {
-
         const paginatedEvents = events.slice(startIndex, endIndex);
-        
         const totalPages = Math.ceil(events.length / limit);
 
         const response = {

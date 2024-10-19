@@ -8,15 +8,15 @@ router.get('/', (req, res) => {
 });
 
 router.get('/api/products', (req, res) => {
-    res.render('products');
+    res.render('products'); 
 });
 
 router.get('/api/carts', (req, res) => {
-    res.render('carts');
+    res.render('carts'); 
 });
 
 router.get('/realtimeproducts', (req, res) => {
-    res.render('realTimeProducts');
+    res.render('realTimeProducts'); 
 });
 
 export default router;

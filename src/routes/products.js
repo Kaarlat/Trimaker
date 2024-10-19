@@ -1,34 +1,30 @@
-import { Router } from 'express';
-import { createEvent, getEvents, deleteEvent } from '../models/event.model'; 
+import express from 'express';
+import Event from '../models/event';
+const router = express.Router();
 
-const router = Router();
-
-router.post('/', async (req, res) => {
-    try {
-        const event = await createEvent(req.body);
-        res.status(201).json(event);
-    } catch (error) {
-        res.status(500).json({ message: 'Error al crear el evento' });
-    }
-});
-
+// GET /api/products
 router.get('/', async (req, res) => {
-    try {
-        const events = await getEvents();
-        res.json(events);
-    } catch (error) {
-        res.status(500).json({ message: 'Error al obtener eventos' });
-    }
-});
+    const { page = 1, limit = 10, category, available, sort } = req.query;
 
-// Ruta para eliminar un evento
-router.delete('/:id', async (req, res) => {
-    const { id } = req.params;
+    const query = {};
+    if (category) {
+        query.category = category;
+    }
+    if (available) {
+        query.available = available === 'true'; 
+    }
+
+    const options = {
+        page: parseInt(page),
+        limit: parseInt(limit),
+        sort: sort === 'asc' ? { price: 1 } : { price: -1 },
+    };
+
     try {
-        await deleteEvent(id);
-        res.status(204).send();
+        const products = await Event.paginate(query, options); 
+        res.json(products);
     } catch (error) {
-        res.status(500).json({ message: 'Error al eliminar el evento' });
+        res.status(500).json({ message: error.message });
     }
 });
 

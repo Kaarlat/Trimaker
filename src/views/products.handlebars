@@ -39,22 +39,24 @@
         <button id="filter-button">Aplicar Filtros</button>
     </div>
 
-    <div class="products-container" id="products-container">
-      
-    </div>
+    <div class="products-container" id="products-container"></div>
+
+    <!-- Contenedor para la paginación -->
+    <div id="pagination"></div>
 
     <script src="/socket.io/socket.io.js"></script>
     <script>
         const socket = io();
+        let currentPage = 1;
 
-      
-        socket.emit('getProducts');
 
-        socket.on('productList', products => {
+        socket.emit('getProducts', currentPage);
+
+        socket.on('productList', (data) => {
             const container = document.getElementById('products-container');
             container.innerHTML = '';
 
-            products.forEach(product => {
+            data.products.forEach(product => {
                 const productCard = document.createElement('div');
                 productCard.classList.add('product-card');
                 productCard.innerHTML = `
@@ -65,6 +67,26 @@
                 `;
                 container.appendChild(productCard);
             });
+
+            // Mostrar la paginación
+            const pagination = document.getElementById('pagination');
+            pagination.innerHTML = '';
+
+            if (data.prevPage) {
+                const prevLink = document.createElement('a');
+                prevLink.href = "#";
+                prevLink.innerHTML = 'Anterior';
+                prevLink.onclick = () => changePage(data.prevPage);
+                pagination.appendChild(prevLink);
+            }
+
+            if (data.nextPage) {
+                const nextLink = document.createElement('a');
+                nextLink.href = "#";
+                nextLink.innerHTML = 'Siguiente';
+                nextLink.onclick = () => changePage(data.nextPage);
+                pagination.appendChild(nextLink);
+            }
         });
 
         document.getElementById('filter-button').addEventListener('click', () => {
@@ -72,11 +94,16 @@
             const available = document.getElementById('availability-filter').value;
             const sort = document.getElementById('sort-filter').value;
 
-            socket.emit('getFilteredProducts', { category, available, sort });
+            socket.emit('getFilteredProducts', { category, available, sort, page: currentPage });
         });
 
         function deleteProduct(id) {
             socket.emit('deleteProduct', id);
+        }
+
+        function changePage(page) {
+            currentPage = page;
+            socket.emit('getProducts', currentPage);
         }
 
         socket.on('eventList', events => {

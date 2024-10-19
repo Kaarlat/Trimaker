@@ -1,3 +1,4 @@
+//botón de crear Evento
 function bounceButton() {
     const button = document.getElementById('create-event-btn');
     button.classList.add('bounce');
@@ -12,7 +13,7 @@ document.getElementById('create-event-btn').addEventListener('click', function()
 });
 
 setInterval(bounceButton, 2000);
-
+// Productos
 const socket = io();
 
 document.addEventListener('DOMContentLoaded', () => {

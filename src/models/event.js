@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import mongoosePaginate from 'mongoose-paginate-v2';
 
 const eventSchema = new mongoose.Schema({
     title: { type: String, required: true },
@@ -6,6 +7,8 @@ const eventSchema = new mongoose.Schema({
     stock: { type: Number, required: true },
     category: { type: String, required: true }
 });
+
+eventSchema.plugin(mongoosePaginate);
 
 const Event = mongoose.model('Event', eventSchema);
 
