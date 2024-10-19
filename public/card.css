@@ -37,7 +37,6 @@
     padding: 10px;
 }
 
-
 .quantity {
     width: 5px; 
     text-align: center; 
@@ -52,4 +51,12 @@
 
 .btn-primary:hover {
     background-color: #e65c00; 
+}
+
+.btn-jump {
+    transition: transform 0.2s;
+}
+
+.btn-jump:hover {
+    transform: translateY(-5px); 
 }

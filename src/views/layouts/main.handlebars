@@ -49,7 +49,6 @@
 
     <main>
         {{{body}}}
-      
         <div id="events-container" class="row"></div>
         <div id="pagination">
             <button id="prev-page" class="btn btn-secondary" onclick="fetchEvents(currentPage - 1)">Anterior</button>
@@ -57,6 +56,7 @@
             <button id="next-page" class="btn btn-secondary" onclick="fetchEvents(currentPage + 1)">Siguiente</button>
         </div>
     </main>
+
     <footer>
         <p>&copy; 2024 OMATSURI</p>
     </footer>
@@ -71,6 +71,7 @@
                 .then(data => {
                     const eventsContainer = document.getElementById('events-container');
                     eventsContainer.innerHTML = ''; 
+
                     data.payload.forEach(event => {
                         const card = document.createElement('div');
                         card.className = 'col-md-4 mb-4';
@@ -88,7 +89,6 @@
                         eventsContainer.appendChild(card);
                     });
 
-                   
                     document.getElementById('page-info').innerText = `Página ${data.page} de ${data.totalPages}`;
                     currentPage = data.page;
                 })
@@ -97,7 +97,25 @@
 
         document.addEventListener('DOMContentLoaded', () => {
             fetchEvents(currentPage); 
+
+            // Agregar evento a los botones de "Agregar al Carrito"
+            document.getElementById('events-container').addEventListener('click', (event) => {
+                if (event.target.classList.contains('add-to-cart')) {
+                    const title = event.target.getAttribute('data-title');
+                    const price = event.target.getAttribute('data-price');
+                    const quantity = event.target.previousElementSibling.value;
+
+                    // Aquí puedes agregar la lógica para agregar al carrito
+                    // Por ejemplo, puedes emitir un socket o hacer una llamada al servidor
+
+                    console.log(`Agregado al carrito: ${title}, Precio: $${price}, Cantidad: ${quantity}`);
+                    // Actualizar el contador del carrito (esto debe ser implementado adecuadamente)
+                    const cartCount = document.getElementById('cart-count');
+                    cartCount.innerText = parseInt(cartCount.innerText) + parseInt(quantity);
+                }
+            });
         });
     </script>
 </body>
 </html>
+

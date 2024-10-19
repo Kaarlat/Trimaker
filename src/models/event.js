@@ -26,3 +26,4 @@ export const deleteEvent = async (id) => {
 };
 
 export default Event;
+

@@ -9,6 +9,7 @@ import viewsRouter from '../src/routes/views.router.js';
 import productsRouter from '../src/routes/products.js';
 import Message from '../src/models/message.js';
 import Event from './models/event.js'; 
+import Cart from './models/cart.js'; 
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -91,35 +92,85 @@ io.on('connection', (socket) => {
     });
 });
 
-app.get('/api/events', (req, res) => {
-    const page = parseInt(req.query.page) || 1;
-    const limit = parseInt(req.query.limit) || 10; 
-    const startIndex = (page - 1) * limit; 
-    const endIndex = startIndex + limit; 
+// Rutas API para productos
+app.get('/api/products', async (req, res) => {
+    const { page = 1, limit = 10, category, available, sort } = req.query;
+    const options = {
+        page: parseInt(page),
+        limit: parseInt(limit),
+        sort: sort === 'desc' ? { price: -1 } : { price: 1 },
+    };
 
-    // Obtener eventos desde MongoDB
-    Event.find().sort({ createdAt: -1 }).exec().then(events => {
-        const paginatedEvents = events.slice(startIndex, endIndex);
-        const totalPages = Math.ceil(events.length / limit);
+    try {
+        const query = {};
+        if (category) query.category = category;
+        if (available) query.available = available;
 
-        const response = {
-            status: paginatedEvents.length > 0 ? "success" : "error",
-            payload: paginatedEvents,
-            totalPages: totalPages,
-            prevPage: page > 1 ? page - 1 : null,
-            nextPage: page < totalPages ? page + 1 : null,
-            page: page,
-            hasPrevPage: page > 1,
-            hasNextPage: page < totalPages,
-            prevLink: page > 1 ? `/api/events?page=${page - 1}&limit=${limit}` : null,
-            nextLink: page < totalPages ? `/api/events?page=${page + 1}&limit=${limit}` : null,
-        };
+        const products = await Event.paginate(query, options);
+        res.json({
+            status: "success",
+            payload: products.docs,
+            totalPages: products.totalPages,
+            prevPage: products.hasPrevPage ? products.page - 1 : null,
+            nextPage: products.hasNextPage ? products.page + 1 : null,
+            page: products.page,
+            hasPrevPage: products.hasPrevPage,
+            hasNextPage: products.hasNextPage,
+            prevLink: products.hasPrevPage ? `/api/products?page=${products.page - 1}&limit=${limit}` : null,
+            nextLink: products.hasNextPage ? `/api/products?page=${products.page + 1}&limit=${limit}` : null,
+        });
+    } catch (error) {
+        console.error('Error al obtener productos:', error);
+        res.status(500).json({ status: "error", message: "Error al obtener productos" });
+    }
+});
 
-        res.json(response);
-    }).catch(err => {
-        console.error('Error al obtener eventos:', err);
-        res.status(500).json({ status: "error", message: "Error al obtener eventos" });
-    });
+// Métodos para el carrito
+app.delete('/api/carts/:id', async (req, res) => {
+    try {
+        await Cart.findByIdAndDelete(req.params.id);
+        res.json({ status: "success", message: "Carrito eliminado" });
+    } catch (error) {
+        console.error('Error al eliminar el carrito:', error);
+        res.status(500).json({ status: "error", message: "Error al eliminar el carrito" });
+    }
+});
+
+app.put('/api/carts/:id', async (req, res) => {
+    const { products } = req.body; // Asegúrate de que el cuerpo contenga 'products'
+    
+    try {
+        const updatedCart = await Cart.findByIdAndUpdate(req.params.id, { products }, { new: true });
+        res.json({ status: "success", payload: updatedCart });
+    } catch (error) {
+        console.error('Error al actualizar el carrito:', error);
+        res.status(500).json({ status: "error", message: "Error al actualizar el carrito" });
+    }
+});
+
+// Manejo de errores y validaciones
+const validateProductData = (data) => {
+    if (!data.name || !data.price || !data.category) {
+        return { valid: false, message: "Faltan datos obligatorios" };
+    }
+    return { valid: true };
+};
+
+// Ejemplo de cómo agregar un producto
+app.post('/api/products', async (req, res) => {
+    const { valid, message } = validateProductData(req.body);
+    if (!valid) {
+        return res.status(400).json({ status: "error", message });
+    }
+
+    const newProduct = new Event(req.body);
+    try {
+        await newProduct.save();
+        res.status(201).json({ status: "success", payload: newProduct });
+    } catch (error) {
+        console.error('Error al agregar el producto:', error);
+        res.status(500).json({ status: "error", message: "Error al agregar el producto" });
+    }
 });
 
 const PORT = 8080;

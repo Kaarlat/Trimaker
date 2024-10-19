@@ -18,32 +18,45 @@
 
     <script src="/socket.io/socket.io.js"></script>
     <script>
-        const socket = io();
-        const socketId = socket.id; 
+        const socket = io(); // Conectar a Socket.IO
+        let socketId;
 
-        fetch(`/api/cart?socketId=${socketId}`) 
-            .then(response => response.json())
-            .then(cart => {
-                const cartItemsContainer = document.getElementById('cart-items');
-                cart.forEach(item => {
-                    const itemDiv = document.createElement('div');
-                    itemDiv.className = 'col-md-4 mb-4';
-                    itemDiv.innerHTML = `
-                        <div class="card">
-                            <div class="card-body">
-                                <h5 class="card-title">${item.title}</h5>
-                                <p class="card-text">Precio: $${item.price}</p>
-                                <p class="card-text">Cantidad: ${item.quantity}</p>
+        socket.on('connect', () => {
+            socketId = socket.id; // Asignar el socket ID cuando se conecta
+
+            // Obtener el carrito una vez que el socket esté conectado
+            fetch(`/api/cart?socketId=${socketId}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Error al obtener el carrito');
+                    }
+                    return response.json();
+                })
+                .then(cart => {
+                    const cartItemsContainer = document.getElementById('cart-items');
+                    cart.products.forEach(item => {
+                        const itemDiv = document.createElement('div');
+                        itemDiv.className = 'col-md-4 mb-4';
+                        itemDiv.innerHTML = `
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5 class="card-title">${item.title}</h5>
+                                    <p class="card-text">Precio: $${item.price}</p>
+                                    <p class="card-text">Cantidad: ${item.quantity}</p>
+                                </div>
                             </div>
-                        </div>
-                    `;
-                    cartItemsContainer.appendChild(itemDiv);
-                });
-            });
+                        `;
+                        cartItemsContainer.appendChild(itemDiv);
+                    });
+                })
+                .catch(error => console.error('Error al obtener el carrito:', error));
+        });
 
+        // Escuchar eventos de actualización del carrito
         socket.on('cartUpdated', (updatedCart) => {
             const cartItemsContainer = document.getElementById('cart-items');
-            cartItemsContainer.innerHTML = '';
+            cartItemsContainer.innerHTML = ''; // Limpiar el contenedor de artículos
+
             updatedCart.products.forEach(item => {
                 const itemDiv = document.createElement('div');
                 itemDiv.className = 'col-md-4 mb-4';
@@ -62,3 +75,4 @@
     </script>
 </body>
 </html>
+

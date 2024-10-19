@@ -1,12 +1,12 @@
-const express = require('express');
-const http = require('http');
-const socketIo = require('socket.io');
+import express from 'express';
+import http from 'http';
+import socketIo from 'socket.io';
 
 const app = express();
 const server = http.createServer(app);
 const io = socketIo(server);
 
-// Para almacenar
+// Para almacenar los carritos
 const carts = {}; 
 
 // Middleware
@@ -17,13 +17,13 @@ app.use(express.static('public'));
 app.get('/api/cart', (req, res) => {
     const cartId = req.query.socketId; 
     if (carts[cartId]) {
-        res.json(carts[cartId].products);
+        res.json(carts[cartId]); // Enviar el carrito completo
     } else {
-        res.json([]);
+        res.json({ products: [] });
     }
 });
 
-// Socket
+// Configuración de sockets
 io.on('connection', (socket) => {
     console.log('Un usuario se ha conectado con ID:', socket.id);
     
@@ -35,7 +35,7 @@ io.on('connection', (socket) => {
         carts[socket.id].products.push(item);
         console.log(`Agregado al carrito: ${JSON.stringify(item)}`);
 
-        // Actualizar cart
+        // Actualizar carrito
         io.emit('cartUpdated', carts[socket.id]);
     });
 
@@ -45,7 +45,8 @@ io.on('connection', (socket) => {
     });
 });
 
-const PORT = process.env.PORT || 3000;
+// Configuración del puerto
+const PORT = process.env.PORT || 8080; // Cambia a 8080 o al puerto que estés usando
 server.listen(PORT, () => {
     console.log(`Servidor escuchando en el puerto ${PORT}`);
 });

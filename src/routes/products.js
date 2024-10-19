@@ -1,5 +1,6 @@
 import express from 'express';
-import Event from '../models/event';
+import Event from '../models/event.js';
+
 const router = express.Router();
 
 // GET /api/products
@@ -11,7 +12,7 @@ router.get('/', async (req, res) => {
         query.category = category;
     }
     if (available) {
-        query.available = available === 'true'; 
+        query.stock = available === 'true' ? { $gt: 0 } : { $gte: 0 }; // Filtra solo eventos disponibles
     }
 
     const options = {
@@ -21,10 +22,20 @@ router.get('/', async (req, res) => {
     };
 
     try {
-        const products = await Event.paginate(query, options); 
-        res.json(products);
+        const products = await Event.paginate(query, options);
+        res.json({
+            status: 'success',
+            payload: products.docs,
+            totalPages: products.totalPages,
+            page: products.page,
+            hasPrevPage: products.hasPrevPage,
+            hasNextPage: products.hasNextPage,
+            prevLink: products.hasPrevPage ? `/api/products?page=${products.prevPage}&limit=${limit}` : null,
+            nextLink: products.hasNextPage ? `/api/products?page=${products.nextPage}&limit=${limit}` : null,
+        });
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        console.error('Error al obtener productos:', error);
+        res.status(500).json({ status: 'error', message: 'Error al obtener productos' });
     }
 });
 
